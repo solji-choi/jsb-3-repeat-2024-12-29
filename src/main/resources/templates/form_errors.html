@@ -1,3 +1,0 @@
-<div th:fragment="fomErrorsFragment" class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-    <p th:each="err : ${#fields.allErrors()}" th:text="${err}"></p>
-</div>
