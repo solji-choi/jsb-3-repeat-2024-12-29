@@ -16,7 +16,7 @@ class Sbb3ApplicationTests {
 			String subject = "테스트데이터입니다:[%03d]".formatted(i);
 			String content ="냉무";
 
-			this.questionService.create(subject, content);
+			this.questionService.create(subject, content, null);
 		}
 	}
 
