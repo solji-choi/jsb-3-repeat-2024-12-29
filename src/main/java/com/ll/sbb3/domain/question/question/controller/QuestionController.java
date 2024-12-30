@@ -10,11 +10,13 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
@@ -81,5 +83,67 @@ public class QuestionController {
         this.questionService.create(questionForm.subject, questionForm.content, author);
 
         return "redirect:/question/list";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{id}")
+    public String modify(
+            Model model,
+            @PathVariable Integer id,
+            Principal principal
+    ) {
+        Question question = this.questionService.findById(id);
+
+        if(!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+
+        QuestionForm questionForm = new QuestionForm(
+                question.getSubject(),
+                question.getContent()
+        );
+        
+        model.addAttribute("questionForm", questionForm);
+
+        return "/domain/question/question/question_form";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{id}")
+    public String modify(
+            @Valid QuestionForm questionForm,
+            BindingResult bindingResult,
+            @PathVariable Integer id,
+            Principal principal
+    ) {
+        if(bindingResult.hasErrors()) {
+            return "/domain/question/question/question_form";
+        }
+
+        Question question = this.questionService.findById(id);
+
+        if(!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+
+        this.questionService.modify(question, questionForm.subject, questionForm.content);
+
+        return "redirect:/question/detail/%d".formatted(id);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String delte(
+            Principal principal,
+            @PathVariable Integer id
+    ) {
+        Question question = this.questionService.findById(id);
+
+        if(!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
+        }
+        this.questionService.delete(question);
+
+        return "redirect:/";
     }
 }
