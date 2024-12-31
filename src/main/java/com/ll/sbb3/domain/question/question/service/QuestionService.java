@@ -49,7 +49,7 @@ public class QuestionService {
         }
     }
 
-    public void create(String subject, String content, SiteUser author) {
+    public Question create(String subject, String content, SiteUser author) {
         Question question = Question
                 .builder()
                 .subject(subject)
@@ -58,6 +58,18 @@ public class QuestionService {
                 .author(author)
                 .build();
 
+        return this.questionRepository.save(question);
+    }
+
+    public void modify(Question question, String subject, String content) {
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setModifyDate(LocalDateTime.now());
+
         this.questionRepository.save(question);
+    }
+
+    public void delete(Question question) {
+        this.questionRepository.delete(question);
     }
 }
