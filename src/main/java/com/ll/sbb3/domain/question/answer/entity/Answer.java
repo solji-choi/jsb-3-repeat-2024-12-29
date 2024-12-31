@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,4 +31,7 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private SiteUser author;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    Set<SiteUser> voter;
 }
