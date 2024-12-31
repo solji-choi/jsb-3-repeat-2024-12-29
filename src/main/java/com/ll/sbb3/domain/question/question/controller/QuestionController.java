@@ -30,12 +30,14 @@ public class QuestionController {
     @GetMapping("/list")
     public String getItems(
             Model model,
-            @RequestParam(defaultValue = "0") int page
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "") String kw
     ) {
 
-        Page<Question> paging = this.questionService.findAll(page);
+        Page<Question> paging = this.questionService.findAll(page, kw);
 
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
 
         return "/domain/question/question/question_list";
     }
