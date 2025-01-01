@@ -1,6 +1,7 @@
 package com.ll.sbb3.domain.question.answer.entity;
 
 import com.ll.sbb3.domain.question.question.entity.Question;
+import com.ll.sbb3.domain.user.user.entity.SiteUser;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,4 +25,7 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Question question;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private SiteUser author;
 }

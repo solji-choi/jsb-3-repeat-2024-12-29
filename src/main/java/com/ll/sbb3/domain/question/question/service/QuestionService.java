@@ -2,6 +2,7 @@ package com.ll.sbb3.domain.question.question.service;
 
 import com.ll.sbb3.domain.question.question.entity.Question;
 import com.ll.sbb3.domain.question.question.repository.QuestionRepository;
+import com.ll.sbb3.domain.user.user.entity.SiteUser;
 import com.ll.sbb3.global.exceptions.DataNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,12 +44,13 @@ public class QuestionService {
         }
     }
 
-    public void create(String subject, String content) {
+    public void create(String subject, String content, SiteUser author) {
         Question question = Question
                 .builder()
                 .subject(subject)
                 .content(content)
                 .createDate(LocalDateTime.now())
+                .author(author)
                 .build();
 
         this.questionRepository.save(question);

@@ -1,6 +1,7 @@
 package com.ll.sbb3.domain.question.question.entity;
 
 import com.ll.sbb3.domain.question.answer.entity.Answer;
+import com.ll.sbb3.domain.user.user.entity.SiteUser;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,4 +29,7 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private SiteUser author;
 }
